@@ -51,7 +51,12 @@ button{font-family:inherit;touch-action:manipulation}
 .sb.warn{background:#a8541a;border-color:#ffd77a;animation:pl 1.2s infinite}@keyframes pl{50%{box-shadow:0 0 0 4px #ffd77a66}}
 .rbar{height:7px;background:#0006;border-radius:4px;margin:3px 0;overflow:hidden}.rbar i{display:block;height:100%;background:#ffd77a}
 #saveInfo{font-size:13px;opacity:.85;margin:-4px 0 4px}
-.bb.c{background:#2a6a8a;border-color:#9fd8ff}
+.bb.c{background:#2a6a8a;border-color:#9fd8ff}.bb small{font-size:13px;font-weight:400;opacity:.85}
+#slotList{display:flex;flex-direction:column;gap:8px}.slot{display:flex;gap:8px;align-items:stretch}
+.sl{flex:1;min-height:68px;border-radius:14px;border:2px solid #c9a15a;background:#4a3418;color:#fff;text-align:left;padding:8px 12px;font-size:15px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.sl b{font-size:16px;color:#ffd77a}.sl .st{font-size:13px;opacity:.85}.sl .sm{font-size:13px;line-height:1.4}.sl.empty{background:#2a2014;border-style:dashed}.sl.empty .sm{opacity:.6}.sl.dis{opacity:.55}
+.sdel{flex:0 0 60px;border-radius:14px;border:2px solid #e39f9f;background:#7a2d2d;color:#fff;font-size:24px}
+@media (orientation:landscape) and (max-height:500px){.sl{min-height:56px;padding:5px 10px}.card{padding:12px}}
 @media (max-width:620px){#info{width:118px;font-size:11px}#info b{font-size:13px}.rs{min-width:0;padding:2px 4px;font-size:12px}#top{font-size:12px;gap:3px}#clock{display:none}#age{margin-left:auto}.tb{min-width:40px;height:34px;font-size:16px}.ab{width:64px}}
 @media (orientation:portrait){#panel{flex-direction:column;gap:4px}#info{width:auto;height:auto;max-height:62px}#acts{min-height:72px}}
 </style>
@@ -74,15 +79,16 @@ button{font-family:inherit;touch-action:manipulation}
 <div id="toast"></div>
 <div class="ov" id="menu"><div class="card">
  <h1>王国纪元</h1><div style="opacity:.8;margin-bottom:8px">原创即时战略 · 采集 · 建造 · 征战</div>
- <button class="bb c hide" id="bCont">▶ 继续游戏</button><div id="saveInfo" class="hide"></div><div id="newT" class="hide" style="font-size:13px;opacity:.8;margin-top:8px">新游戏：选择难度</div><button class="bb g" data-d="0">简单</button><button class="bb" data-d="1">普通</button><button class="bb r" data-d="2">困难</button>
+ <button class="bb c hide" id="bCont">▶ 继续游戏</button><div id="saveInfo" class="hide"></div><button class="bb" id="bSlots">📂 读取进度</button><div id="newT" class="hide" style="font-size:13px;opacity:.8;margin-top:8px">新游戏：选择难度</div><button class="bb g" data-d="0">简单</button><button class="bb" data-d="1">普通</button><button class="bb r" data-d="2">困难</button>
  <p><b>目标：</b>摧毁红色敌军的城镇中心和所有建筑。<br>
  <b>操作：</b>点选单位/建筑；选中单位后点地面＝移动，点树/浆果/矿＝采集，点敌人＝攻击；未选中村民时点资源＝查看剩余量。双击单位＝选中屏幕内同类。单指拖空地＝移动视角，双指捏合＝缩放。长按后拖动或打开「框选」按钮＝框选多个单位。<br>
  <b>建造：</b>选村民→点底部建筑按钮→点地图放置（绿色可放），再点一次或按 ✔ 确认。<br>
  <b>克制：</b>枪兵克骑兵，骑兵克弓手，弓手克枪兵，投石车拆建筑。<br>
- <b>存档：</b>每 10 秒及切出页面时自动保存，暂停菜单可手动保存/读取。<br><b>时代：</b>拓荒时代 → 青铜时代 → 铁器时代，在城镇中心升级，解锁新建筑和兵种。</p>
+ <b>存档：</b>每 10 秒及切出页面时写入「自动存档」；暂停菜单可保存到存档1–5，主菜单「读取进度」可读取或删除任意存档。<br><b>时代：</b>拓荒时代 → 青铜时代 → 铁器时代，在城镇中心升级，解锁新建筑和兵种。</p>
 </div></div>
 <div class="ov hide" id="pause"><div class="card"><h1>暂停</h1>
- <button class="bb g" id="bResume">继续游戏</button><button class="bb c" id="bSave">💾 保存游戏</button><button class="bb" id="bLoad">📂 读取存档</button><div id="pSaveInfo" style="font-size:13px;opacity:.8"></div><button class="bb" id="bRestart">重新开始</button><button class="bb r" id="bMenu">返回主菜单</button></div></div>
+ <button class="bb g" id="bResume">继续游戏</button><button class="bb c" id="bSave">💾 保存进度</button><button class="bb" id="bLoad">📂 读取进度</button><div id="pSaveInfo" style="font-size:13px;opacity:.8"></div><button class="bb" id="bRestart">重新开始</button><button class="bb r" id="bMenu">返回主菜单</button></div></div>
+<div class="ov hide" id="slots" style="z-index:25"><div class="card"><h1 id="slotsT" style="font-size:26px;letter-spacing:2px">读取进度</h1><div id="slotsH" style="font-size:13px;opacity:.8;margin-bottom:6px"></div><div id="slotList"></div><button class="bb" id="slotsX">返回</button></div></div>
 <div class="ov hide" id="cfm" style="z-index:30"><div class="card"><p id="cfmT" style="text-align:center;font-size:16px"></p><button class="bb r" id="cfmY">确定</button><button class="bb" id="cfmN">取消</button></div></div>
 <div class="ov hide" id="end"><div class="card"><h1 id="endT">胜利</h1><p id="endS" style="text-align:center"></p>
  <button class="bb g" id="bAgain">再来一局</button><button class="bb" id="bMenu2">主菜单</button></div></div>
@@ -591,12 +597,12 @@ function updActs(){const p=G.players[0];for(const o of actBtns){o.b.classList.to
 function togglePause(){if(!G||G.over)return;paused=!paused;$('pause').classList.toggle('hide',!paused);if(paused){saveGame(true);showSaveInfo()}}
 $('bPause').onclick=togglePause;$('bResume').onclick=togglePause;
 function ask(msg,yes){$('cfmT').textContent=msg;$('cfm').classList.remove('hide');$('cfmY').onclick=()=>{$('cfm').classList.add('hide');yes()};$('cfmN').onclick=()=>$('cfm').classList.add('hide')}
-$('bRestart').onclick=()=>ask('重新开始将覆盖当前存档，确定吗？',()=>newGame(G.d));$('bAgain').onclick=()=>newGame(G.d);
+$('bRestart').onclick=()=>ask('重新开始会覆盖「自动存档」（存档1–5 不受影响），确定吗？',()=>newGame(G.d));$('bAgain').onclick=()=>newGame(G.d);
 $('bMenu').onclick=$('bMenu2').onclick=()=>{if(G&&!G.over)saveGame(true);document.querySelectorAll('.ov').forEach(o=>o.classList.add('hide'));$('menu').classList.remove('hide');paused=true;showMenu()};
-document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(saveMeta())ask('开始新游戏将覆盖现有存档，确定吗？',()=>newGame(d));else newGame(d)});
+document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(slotMeta('auto'))ask('新游戏会覆盖「自动存档」（存档1–5 不受影响），确定吗？',()=>newGame(d));else newGame(d)});
 $('bCont').onclick=()=>{if(!loadGame())showMenu()};
-$('bSave').onclick=()=>{if(saveGame())toast('💾 已保存',1.5);showSaveInfo()};
-$('bLoad').onclick=()=>{if(!saveMeta()){toast('没有存档',1.5);return}ask('读取存档将丢失未保存的进度，确定吗？',()=>{if(loadGame())toast('📂 已读取存档',1.5)})};
+$('bSave').onclick=()=>openSlots('save','pause');
+$('bLoad').onclick=()=>openSlots('load','pause');
 $('bBox').onclick=()=>{boxMode=!boxMode;$('bBox').classList.toggle('on',boxMode);toast(boxMode?'框选模式：单指拖动框选单位':'框选模式已关闭',1.5)};
 let idleCycle=0;$('bIdle').onclick=()=>{const v=G.units.filter(u=>u.o===0&&u.t==='vil'&&u.st==='idle');if(!v.length){toast('没有空闲村民',1.2);return}const u=v[idleCycle++%v.length];sel=[u];uiSig='';centerOn(u)};
 $('bArmy').onclick=()=>{const m=G.units.filter(u=>u.o===0&&u.t!=='vil');if(!m.length){toast('还没有军队',1.2);return}sel=m;uiSig='';toast('已选中 '+m.length+' 个士兵',1)};
@@ -607,19 +613,31 @@ setInterval(()=>{if(G&&!G.over&&!paused)saveGame(true)},10000);
 // icon for home screen
 (function(){const c=document.createElement('canvas');c.width=c.height=180;const g=c.getContext('2d');g.fillStyle='#2b5a2b';g.fillRect(0,0,180,180);g.fillStyle='#c9a15a';g.fillRect(40,70,100,80);g.fillStyle='#8a3a24';g.beginPath();g.moveTo(30,75);g.lineTo(90,25);g.lineTo(150,75);g.fill();g.fillStyle='#2f7bff';g.fillRect(90,10,30,18);g.fillStyle='#3a2414';g.fillRect(78,110,24,40);try{$('ati').href=c.toDataURL()}catch(e){}})();
 // ---------- save / load
-const SAVE_KEY='wangguo_save',SAVE_VER=1;
-function saveMeta(){try{const m=localStorage.getItem(SAVE_KEY+'_meta');if(!m||!localStorage.getItem(SAVE_KEY))return null;const o=JSON.parse(m);return o&&o.v===SAVE_VER?o:null}catch(e){return null}}
-function clearSave(){try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem(SAVE_KEY+'_meta')}catch(e){}}
-function saveGame(quiet){if(!G||G.over)return false;try{
+const SAVE_VER=1,OLD_KEY='wangguo_save',SLOT_PRE='wangguo_slot_',SLOTS=['auto','1','2','3','4','5'];
+const slotName=id=>id==='auto'?'自动存档':'存档'+id;
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function slotMeta(id){try{const m=lsGet(SLOT_PRE+id+'_meta');if(!m||!lsGet(SLOT_PRE+id))return null;const o=JSON.parse(m);return o&&o.v===SAVE_VER&&DIFF[o.d]?o:null}catch(e){return null}}
+function allMetas(){return SLOTS.map(id=>({id,m:slotMeta(id)}))}
+function latestSlot(){let best=null;for(const {id,m} of allMetas())if(m&&(!best||m.ts>best.m.ts))best={id,m};return best}
+function saveMeta(){const l=latestSlot();return l?l.m:null}
+function clearSlot(id){try{localStorage.removeItem(SLOT_PRE+id);localStorage.removeItem(SLOT_PRE+id+'_meta')}catch(e){}}
+function clearSave(){clearSlot('auto')}
+// v2 used one key (wangguo_save); move it into the 自动存档 slot so nobody loses progress
+function migrateV2(){try{const d=localStorage.getItem(OLD_KEY),m=localStorage.getItem(OLD_KEY+'_meta');if(d==null&&m==null)return;
+ if(d&&m){let om=null;try{om=JSON.parse(m)}catch(e){}const cur=slotMeta('auto');if(!cur||(om&&om.ts>cur.ts)){localStorage.setItem(SLOT_PRE+'auto',d);localStorage.setItem(SLOT_PRE+'auto_meta',m)}}
+ localStorage.removeItem(OLD_KEY);localStorage.removeItem(OLD_KEY+'_meta')}catch(e){}}
+function saveGame(quiet,slot){slot=slot||'auto';if(!G||G.over)return false;try{
  const U2=G.units.map(u=>{const o={};for(const k in u)if(k!=='path')o[k]=u[k];if(u.path&&u.pi<u.path.length)o.path=u.path.slice(u.pi).map(p=>[Math.round(p.x),Math.round(p.y)]);o.pi=0;return o});
  const data={v:SAVE_VER,d:G.d,time:G.time,id:G.id,tseed:G.tseed,seedv:G.seedv,starts:G.starts,players:G.players,ai:G.ai,alertT:G.alertT,
   res:G.res.map(r=>[r.id,r.t,r.tx,r.ty,Math.round(r.amt*100)/100,r.max,r.v]),blds:G.blds,units:U2,
   proj:G.proj.map(p=>{const o={...p};o.a=p.a&&p.a.id?p.a.id:0;return o}),exp:Array.from(G.exp).join(''),cam:{x:cam.x,y:cam.y,z:cam.z},sel:sel.map(e=>e.id)};
- localStorage.setItem(SAVE_KEY,JSON.stringify(data));
- localStorage.setItem(SAVE_KEY+'_meta',JSON.stringify({v:SAVE_VER,d:G.d,time:G.time,age:G.players[0].age,ts:Date.now()}));return true}
+ const p0=G.players[0];
+ localStorage.setItem(SLOT_PRE+slot,JSON.stringify(data));
+ localStorage.setItem(SLOT_PRE+slot+'_meta',JSON.stringify({v:SAVE_VER,d:G.d,time:G.time,age:p0.age,pop:p0.pop,cap:p0.cap,r:{f:Math.floor(p0.r.f),w:Math.floor(p0.r.w),g:Math.floor(p0.r.g),s:Math.floor(p0.r.s)},ts:Date.now()}));return true}
  catch(e){if(!quiet)toast('保存失败：'+(e&&e.name==='QuotaExceededError'?'存储空间不足':'浏览器不允许存储'),2.5);return false}}
-function loadGame(){let o,raw=null;try{raw=localStorage.getItem(SAVE_KEY);o=JSON.parse(raw||'null')}catch(e){o=raw?{}:null}
- if(!o||o.v!==SAVE_VER||!Array.isArray(o.units)||!Array.isArray(o.blds)||!Array.isArray(o.res)||!DIFF[o.d]){clearSave();toast(o?'存档版本不兼容或已损坏，已清除':'没有可用的存档',3);return false}
+function loadGame(slot){if(!slot){const l=latestSlot();if(!l){toast('没有可用的存档',2.5);return false}slot=l.id}
+ let o,raw=lsGet(SLOT_PRE+slot);try{o=JSON.parse(raw||'null')}catch(e){o=raw?{}:null}
+ if(!o||o.v!==SAVE_VER||!Array.isArray(o.units)||!Array.isArray(o.blds)||!Array.isArray(o.res)||!Array.isArray(o.players)||!o.ai||!DIFF[o.d]){clearSlot(slot);toast(o?slotName(slot)+' 版本不兼容或已损坏，已清除':'没有可用的存档',3);return false}
  const prev=G;try{
  G={d:o.d,cfg:DIFF[o.d],time:o.time||0,id:o.id,units:[],blds:[],res:[],proj:[],fx:[],byId:new Map(),
   block:new Uint8Array(N*N),bAt:new Array(N*N).fill(null),rAt:new Array(N*N).fill(null),vis:new Uint8Array(N*N),exp:new Uint8Array(N*N),
@@ -629,20 +647,41 @@ function loadGame(){let o,raw=null;try{raw=localStorage.getItem(SAVE_KEY);o=JSON
  for(const u of o.units){if(!U[u.t])continue;u.dead=false;u.path=u.path?u.path.map(p=>({x:p[0],y:p[1]})):null;u.pi=0;G.units.push(u);G.byId.set(u.id,u)}
  for(const p of o.proj||[]){p.a=G.byId.get(p.a)||null;G.proj.push(p)}
  if(typeof o.exp==='string'&&o.exp.length===N*N)for(let k=0;k<N*N;k++)G.exp[k]=o.exp.charCodeAt(k)===49?1:0;
+ if(!G.blds.length)throw new Error('no buildings');
  seed=G.tseed;buildTerrain();recalcPop();
  if(o.cam){cam.z=o.cam.z||1;cam.x=o.cam.x;cam.y=o.cam.y;clampCam()}
- sel=(o.sel||[]).map(id=>G.byId.get(id)).filter(Boolean);placing=null;
+ sel=(o.sel||[]).map(id=>G.byId.get(id)).filter(Boolean);placing=null;aiAcc=0;visT=0;
  updVis(true);uiSig='';refreshUI(true);
- document.querySelectorAll('.ov').forEach(x=>x.classList.add('hide'));paused=false;return true}
- catch(e){console.warn('load failed',e);G=prev;clearSave();toast('存档已损坏，无法读取',3);return false}}
-function showMenu(){const m=saveMeta();$('bCont').classList.toggle('hide',!m);$('saveInfo').classList.toggle('hide',!m);$('newT').classList.toggle('hide',!m);
- if(m){const t=new Date(m.ts);$('saveInfo').textContent=`存档：${DIFF[m.d].n} · ${AGES[(m.age||1)-1]} · 游戏时间 ${fmtT(m.time)} · 保存于 ${t.getMonth()+1}月${t.getDate()}日 ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`}}
-function showSaveInfo(){const m=saveMeta();$('pSaveInfo').textContent=m?'已自动保存（每 10 秒及切出时）':'' }
-showMenu();
+ document.querySelectorAll('.ov').forEach(x=>x.classList.add('hide'));paused=false;G.loadedFrom=slot;return true}
+ catch(e){console.warn('load failed',e);G=prev;clearSlot(slot);toast(slotName(slot)+' 已损坏，无法读取',3);return false}}
+const fmtDate=ts=>{const t=new Date(ts),z=n=>String(n).padStart(2,'0');return `${t.getFullYear()}-${z(t.getMonth()+1)}-${z(t.getDate())} ${z(t.getHours())}:${z(t.getMinutes())}`};
+function metaLine(m){let s=`${DIFF[m.d].n} · ${AGES[(m.age||1)-1]} · 游戏时间 ${fmtT(m.time)}`;if(m.pop!=null)s+=` · 👥${m.pop}/${m.cap}`;if(m.r)s+=`<br>🍖${m.r.f} 🪵${m.r.w} 🪙${m.r.g} 🪨${m.r.s}`;return s}
+function showMenu(){const l=latestSlot();$('bCont').classList.toggle('hide',!l);$('saveInfo').classList.toggle('hide',!l);$('newT').classList.toggle('hide',!l);
+ if(l)$('saveInfo').textContent=`最近：${slotName(l.id)} · ${DIFF[l.m.d].n} · ${AGES[(l.m.age||1)-1]} · 游戏时间 ${fmtT(l.m.time)} · ${fmtDate(l.m.ts)}`;
+ const n=allMetas().filter(x=>x.m).length;$('bSlots').innerHTML='📂 读取进度'+(n?` <small>(${n} 个存档)</small>`:'')}
+function showSaveInfo(){const m=slotMeta('auto');$('pSaveInfo').textContent=m?'已自动保存（每 10 秒及切出时）· '+fmtDate(m.ts):''}
+// slot list: mode 'load' | 'save'; from 'menu' | 'pause'
+let slotMode='load',slotFrom='menu';
+function openSlots(mode,from){slotMode=mode;slotFrom=from;$('slotsT').textContent=mode==='save'?'💾 保存进度':'📂 读取进度';
+ $('slotsH').textContent=mode==='save'?'选择一个存档位（自动存档由系统每 10 秒更新）':'点存档读取，点 🗑 删除';renderSlots();$('slots').classList.remove('hide')}
+function closeSlots(){$('slots').classList.add('hide');if(slotFrom==='menu')showMenu();else showSaveInfo()}
+function renderSlots(){const L=$('slotList');L.innerHTML='';
+ for(const {id,m} of allMetas()){const row=document.createElement('div');row.className='slot';
+  const disabled=slotMode==='save'?id==='auto':!m;
+  const b=document.createElement('button');b.className='sl'+(m?'':' empty')+(disabled?' dis':'');b.dataset.slot=id;
+  b.innerHTML=`<b>${id==='auto'?'🔄 ':'📁 '}${slotName(id)}</b>`+(m?`<span class="st">${fmtDate(m.ts)}</span><span class="sm">${metaLine(m)}</span>`:`<span class="sm">空</span>`);
+  b.onclick=()=>{if(disabled){if(slotMode==='save')toast('自动存档由系统更新，请选择存档1–5',2);else toast('这是空存档位',1.5);return}
+   if(slotMode==='save'){const go=()=>{if(saveGame(false,id)){toast('💾 已保存到'+slotName(id),1.8);renderSlots()}};if(m)ask(`${slotName(id)}已有进度（${fmtDate(m.ts)}），确定覆盖吗？`,go);else go()}
+   else{const go=()=>{if(loadGame(id)){$('slots').classList.add('hide');toast('📂 已读取'+slotName(id),1.8)}else renderSlots()};if(slotFrom==='pause'&&G&&!G.over)ask('读取'+slotName(id)+'后，当前未保存的进度将丢失，确定吗？',go);else go()}};
+  row.appendChild(b);
+  if(m){const d=document.createElement('button');d.className='sdel';d.textContent='🗑';d.dataset.del=id;d.setAttribute('aria-label','删除'+slotName(id));d.onclick=()=>ask(`确定删除${slotName(id)}吗？删除后无法恢复。`,()=>{clearSlot(id);renderSlots();toast('已删除'+slotName(id),1.5)});row.appendChild(d)}
+  L.appendChild(row)}}
+$('bSlots').onclick=()=>openSlots('load','menu');$('slotsX').onclick=closeSlots;
+migrateV2();showMenu();
 // debug hook
 window.__game={get G(){return G},get sel(){return sel},setSpeed:v=>speed=v,newGame,give:(o,n)=>{for(const k of RES)G.players[o].r[k]+=n},pause:v=>{paused=v},tap,command,aiTick,
  killAll:o=>{for(const b of G.blds.slice())if(b.o===o)kill(b);checkEnd()},fps:()=>fpsS,s2w,cam,centerOn,
- select:f=>{sel=G.units.filter(f);uiSig=''},enqueue,tryBuild,canPlace,saveGame,loadGame,saveMeta,clearSave,findResReach,setSel:a=>{sel=a;uiSig=''},run:sec=>{let n=Math.round(sec/.05);while(n-->0&&!G.over)step(.05)},flushIdle,addUnit,kill,refreshUI,toastText:()=>$('toast').textContent};
+ select:f=>{sel=G.units.filter(f);uiSig=''},enqueue,tryBuild,canPlace,saveGame,loadGame,saveMeta,clearSave,slotMeta,clearSlot,migrateV2,openSlots,findResReach,setSel:a=>{sel=a;uiSig=''},run:sec=>{let n=Math.round(sec/.05);while(n-->0&&!G.over)step(.05)},flushIdle,addUnit,kill,refreshUI,toastText:()=>$('toast').textContent};
 buildSprites();resize();requestAnimationFrame(frame);
 </script>
 </body>
